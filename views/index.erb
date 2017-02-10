@@ -1,0 +1,59 @@
+
+<body style="background-color:lightblue;"></body>
+<header>
+<label>Name  : <%= user.name %></label> <form action="logout" method="post" style="display:inline-block;float:right;"><input style=""type="submit" value="LOGOUT" align="left"/></form></br>
+</br>
+<label>Email : <%= user.email %></label></br>
+<form  align="right"action="logout" method="post">
+</form></br>
+<form action="add_tweet" method="post">
+<input type="text" name="tweet" placeholder="Enter what do u want to tweet"/>
+<input type="submit" value="Tweet"/> 
+</form>
+</header>
+<section style="float:left; max-width:330px">
+<% users.each do |user|
+	if user.id!=user_id %>
+	<% if followers.all(:follower_id=>user.id, :user_id=>session[:user_id]).first
+	str="unfollow"
+else
+	str="follow"
+	end %>
+		<li style="background-color: lightgrey;margin:4px;padding:10px;"><form action="follow" method="post" style="display:inline-block"><input type="submit" value="<%= str %>">
+			<input type="hidden" name="follow_id" value="<%= user.id %>"></form>
+		<%= user.name %>
+		</li>
+	</br>
+	<% end %>
+<% end %>
+</section>
+<% tweets=tweets.reverse! %>
+<% tweets.each do |tweet| %>
+<div class="tweetstyle">
+<div style="background-color:rgb(128, 128, 128); padding:10px"><%= tweet.name_of_the_tweeter %></br></div></br>
+<%= tweet.tweet %>
+<% if likes.all(:tweet_id=>tweet.id, :user_id=>session[:user_id]).first
+	str="dislike"
+else
+	str="like"
+	end %>
+<div style="float:right;"><%= tweet.likes %> <form action="on_like_click"method="post" style="display:inline-block"><input type="submit"value="<%= str %>">
+<input type="hidden" name="tweet_id" value="<%= tweet.id %>"/></form>
+	<!--<form style="display:inline-block"><input type="submit" value="dislikes"></form>  <%= tweet.dislikes %>--> </br></div></br>
+</div></br>
+<% end %>
+
+<style>
+header{
+	padding: 10px;
+	background-color:black;
+	color: white;
+}
+
+.tweetstyle{
+	padding: 15px;
+	margin-left: 200px;
+	border-left: 6px Solid red;
+	background-color: lightgrey;
+}
+</style>
